@@ -2,18 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  Bitcoin,
-  DollarSign,
-  Globe2,
-  Shield,
-  Facebook,
-  Twitter,
-  Instagram,
-  Youtube,
-  Github,
-} from "lucide-react";
+import { ArrowRight, DollarSign, Globe2, Shield } from "lucide-react";
 import Image from "next/image";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";

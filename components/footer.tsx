@@ -12,7 +12,7 @@ export default function footer() {
               <span className="ml-2 text-xl font-bold">Coincart</span>
             </div>
             <p className="mt-4 text-gray-400">
-              The world's most popular way to buy, sell, and trade crypto.
+              The world&apos;s most popular way to buy, sell, and trade crypto.
             </p>
           </div>
 

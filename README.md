@@ -1,36 +1,118 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+[![image](https://res.cloudinary.com/dvgb6dadg/image/upload/v1719326274/turborepo-tailwindcss-shadcn-ui/cover-turborepo-project_vfha54.png)](https://github.com/henriqpohl/turborepo-shadcn-ui-tailwindcss.git)
 
-## Getting Started
+# 🚀 Turborepo starter NextJS with Shadcn/UI & Tailwind CSS
 
-First, run the development server:
+<div align="center">
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+![Static Badge](https://img.shields.io/badge/Turborepo-2.3.3-orangered?logo=turborepo&link=https%3A%2F%2Fgithub.com%2Fvercel%2Fturbo%2Freleases%2Ftag%2Fv2.3.3)
+![Static Badge](https://img.shields.io/badge/1.0-181818?logo=shadcn%2Fui&label=shadcn%2Fui)
+![Static Badge](https://img.shields.io/badge/3.4.17-blue?&logo=tailwindcss&label=Tailwind%20CSS&color=blue)
+![Static Badge](https://img.shields.io/badge/15.1.3-181818?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyBmaWxsPSJ3aGl0ZSIgcm9sZT0iaW1nIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPHRpdGxlPk5leHQuanM8L3RpdGxlPjxwYXRoIGQ9Ik0xOC42NjUgMjEuOTc4QzE2Ljc1OCAyMy4yNTUgMTQuNDY1IDI0IDEyIDI0IDUuMzc3IDI0IDAgMTguNjIzIDAgMTJTNS4zNzcgMCAxMiAwczEyIDUuMzc3IDEyIDEyYzAgMy41ODMtMS41NzQgNi44MDEtNC4wNjcgOS4wMDFMOS4yMTkgNy4ySDcuMnY5LjU5NmgxLjYxNVY5LjI1MWw5Ljg1IDEyLjcyN1ptLTMuMzMyLTguNTMzIDEuNiAyLjA2MVY3LjJoLTEuNnY2LjI0NVoiLz48L3N2Zz4%3D&label=NextJS)
+![Static Badge](https://img.shields.io/badge/pnpm-9.15.1-orange?link=https%3A%2F%2Fgithub.com%2Fpnpm%2Fpnpm%2&logo=PNPM&2Freleases%2Ftag%2Fv9.15.1)
+![GitHub repo size](https://img.shields.io/github/repo-size/henriqpohl/turborepo-shadcn-ui-tailwindcss?color=green)
+![GitHub Release](https://img.shields.io/github/v/release/henriqpohl/turborepo-shadcn-ui-tailwindcss?color=gold)
+
+</div>
+
+Turborepo starter **NextJS** with **Shadcn/UI** & **Tailwind CSS** pre-configured for shared UI components powered by:
+
+- [Turborepo](https://turborepo.org/)
+- [Shadcn/UI](https://ui.shadcn.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [PNPM](https://pnpm.io/)
+
+> [!NOTE]
+> This example uses `pnpm` as package manager.
+
+## 📝 Using this example
+
+Clone the repository:
+
+```sh
+git clone https://github.com/henriqpohl/turborepo-shadcn-ui-tailwindcss.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Install dependencies:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+cd turborepo-shadcn-ui-tailwindcss
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 What's inside?
 
-## Learn More
+This Turborepo includes the following packages/apps:
 
-To learn more about Next.js, take a look at the following resources:
+### Apps and Packages 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `docs`: a [Next.js](https://nextjs.org/) app
+- `@repo/ui`: a stub React component library shared by  applications inside of `apps` folder (🚀 powered by **Shadcn/UI** and **Tailwind CSS**)
+- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
-## Deploy on Vercel
+### Utilities
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This Turborepo has some additional tools already setup for you:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [TypeScript](https://www.typescriptlang.org/) for static type checking
+- [ESLint](https://eslint.org/) for code linting
+- [Prettier](https://prettier.io) for code formatting
+
+### 🏗️ Build
+
+To build all apps and packages, run the following command:
+
+```sh
+cd turborepo-shadcn-ui-tailwindcss
+pnpm build
+```
+
+### 💻 Develop
+
+To develop all apps and packages, run the following command:
+
+```sh
+cd turborepo-shadcn-ui-tailwindcss
+pnpm dev
+```
+
+### 🌐 Remote Caching
+
+Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+
+By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
+
+```sh
+cd turborepo-shadcn-ui-tailwindcss
+npx turbo login
+```
+
+This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+
+Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+
+```sh
+npx turbo link
+```
+
+## ℹ️ Useful Links
+
+Learn more about the power of **Turborepo**:
+
+- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
+- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
+- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
+- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
+- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
+- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+
+Learn more about **Shadcn/UI**:
+
+- [Documentation](https://ui.shadcn.com/docs)
+- [Components](https://ui.shadcn.com/docs/components/accordion)
+
+## 🐞 Found a Bug?
+
+Uh-oh, looks like you stumbled upon a bug? No worries, we're here to squash it! Just head over to our issues section on GitHub and let us know what's up.

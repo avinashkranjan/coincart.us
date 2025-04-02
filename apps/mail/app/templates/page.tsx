@@ -13,8 +13,8 @@ import {
 
 const templates = [
   {
-    id: "crypto_email",
-    title: "Coincart Crypto Email",
+    id: "crypto_email_norton",
+    title: "Norton Coincart Crypto Email",
     description:
       "A sleek and modern email template designed for cryptocurrency exchanges and wallets.",
     image:

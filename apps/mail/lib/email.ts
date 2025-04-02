@@ -1,20 +1,20 @@
 export function getTemplateName(templateId: string): string {
   const templates: Record<string, string> = {
-    crypto_email: "Norton LifeLock Invoice Email",
+    crypto_email_norton: "Norton LifeLock Invoice Email",
   };
   return templates[templateId] || "Template";
 }
 
 export function getTemplateSubject(templateId: string): string {
   const subjects: Record<string, string> = {
-    crypto_email: "Norton LifeLock Invoice",
+    crypto_email_norton: "Norton LifeLock Invoice",
   };
   return subjects[templateId] || "Email Subject";
 }
 
 export function getTemplateContent(templateId: string): string {
   const contents: Record<string, string> = {
-    crypto_email: `
+    crypto_email_norton: `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -42,7 +42,7 @@ export function getTemplateContent(templateId: string): string {
                                 </td>
                                 <td style="text-align: right;">
                                     <span style="color: #4b5563; margin-right: 24px;">My Bill</span>
-                                    <span style="color: #4b5563;">+1 (888) 343-6571</span>
+                                    <span style="color: #4b5563;">+1 (800) 697-1570</span>
                                 </td>
                             </tr>
                         </table>
@@ -148,8 +148,8 @@ export function getTemplateContent(templateId: string): string {
                         </p>
 
                         <div style="text-align: center; margin: 24px 0;">
-                            <a href="tel:+18883436571" style="display: inline-block; background-color: #2563eb; color: white; padding: 12px 32px; text-decoration: none; border-radius: 4px; font-size: 18px;">
-                                +1 (888) 343-6571
+                            <a href="tel:+18006971570" style="display: inline-block; background-color: #2563eb; color: white; padding: 12px 32px; text-decoration: none; border-radius: 4px; font-size: 18px;">
+                                +1 (800) 697-1570
                             </a>
                         </div>
 

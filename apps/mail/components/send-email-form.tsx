@@ -20,6 +20,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
+import { EmailSendingProgress } from "./email-sending-progress";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface SendEmailFormProps {
   content: string;
@@ -36,6 +38,16 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
   const [previewRecipients, setPreviewRecipients] = useState<string[]>([]);
   const [allRecipients, setAllRecipients] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  // Progress tracking
+  const [showProgress, setShowProgress] = useState(false);
+  const [sendingComplete, setSendingComplete] = useState(false);
+  const [currentProgress, setCurrentProgress] = useState(0);
+  const [totalEmails, setTotalEmails] = useState(0);
+  const [successfulEmails, setSuccessfulEmails] = useState<string[]>([]);
+  const [failedEmails, setFailedEmails] = useState<
+    { email: string; reason: string }[]
+  >([]);
 
   const handleCsvUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -81,6 +93,76 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
     }
   };
 
+  const resetProgress = () => {
+    setCurrentProgress(0);
+    setSuccessfulEmails([]);
+    setFailedEmails([]);
+    setSendingComplete(false);
+  };
+
+  const closeProgressDialog = () => {
+    setShowProgress(false);
+    resetProgress();
+  };
+
+  const sendEmailsInBatches = async (recipientsArray: string[]) => {
+    resetProgress();
+    setShowProgress(true);
+    setTotalEmails(recipientsArray.length);
+
+    const batchSize = 500;
+    const totalBatches = Math.ceil(recipientsArray.length / batchSize);
+
+    for (let i = 0; i < recipientsArray.length; i += batchSize) {
+      const batch = recipientsArray.slice(i, i + batchSize);
+      const batchIndex = Math.floor(i / batchSize);
+
+      try {
+        const response = await fetch("/api/send-email-batch", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            subject,
+            content,
+            batch,
+            batchIndex,
+            totalBatches,
+            senderName,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to send batch");
+        }
+
+        setSuccessfulEmails((prev) => [...prev, ...data.results.successful]);
+        setFailedEmails((prev) => [...prev, ...data.results.failed]);
+        setCurrentProgress((prev) => prev + batch.length);
+      } catch (error: any) {
+        console.error("Error sending batch:", error);
+
+        const newFailures = batch.map((email) => ({
+          email,
+          reason: error.message || "Failed to process batch",
+        }));
+
+        setFailedEmails((prev) => [...prev, ...newFailures]);
+        setCurrentProgress((prev) => prev + batch.length);
+      }
+    }
+
+    setSendingComplete(true);
+
+    toast({
+      title: "Email Sending Complete",
+      description: `Successfully sent ${successfulEmails.length} emails. ${failedEmails.length} failed.`,
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -95,31 +177,41 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
     }
 
     try {
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          subject,
-          content,
-          recipients: recipientsArray,
-          senderName,
-        }),
-      });
+      if (recipientsArray.length <= 100) {
+        const response = await fetch("/api/send-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            subject,
+            content,
+            recipients: recipientsArray,
+            senderName,
+          }),
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to send emails");
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to send emails");
+        }
+
+        toast({
+          title: "Emails Sent Successfully",
+          description: `Your emails have been sent to ${data.totalSuccessful} recipients. ${data.totalFailed} failed.`,
+        });
+
+        setTotalEmails(recipientsArray.length);
+        setSuccessfulEmails(data.results.successful);
+        setFailedEmails(data.results.failed);
+        setCurrentProgress(recipientsArray.length);
+        setSendingComplete(true);
+        setShowProgress(true);
+      } else {
+        await sendEmailsInBatches(recipientsArray);
       }
 
-      toast({
-        title: "Emails Sent Successfully",
-        description: `Your emails have been sent to ${data.count} recipients.`,
-      });
-
-      // Reset form
       if (sendMethod === "manual") {
         setRecipients("");
       } else {
@@ -142,121 +234,140 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Send Email</CardTitle>
-          <CardDescription>
-            Send your email to recipients via SendGrid
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {error && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
+    <>
+      <form onSubmit={handleSubmit}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Send Email</CardTitle>
+            <CardDescription>
+              Send your email to recipients via SendGrid
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {error && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
 
-          <div className="space-y-4 mb-4">
-            <div className="space-y-2">
-              <Label htmlFor="sender-name">Sender Name (optional)</Label>
-              <Input
-                id="sender-name"
-                placeholder="Your Name or Company"
-                value={senderName}
-                onChange={(e) => setSenderName(e.target.value)}
-              />
-              <p className="text-sm text-gray-500">
-                This will appear as the sender name in the recipient's inbox
-              </p>
-            </div>
-          </div>
-
-          <Tabs value={sendMethod} onValueChange={setSendMethod}>
-            <TabsList className="mb-4">
-              <TabsTrigger value="manual">Enter Recipients</TabsTrigger>
-              <TabsTrigger value="csv">Upload CSV</TabsTrigger>
-            </TabsList>
-            <TabsContent value="manual" className="space-y-4">
+            <div className="space-y-4 mb-4">
               <div className="space-y-2">
-                <Label htmlFor="recipients">Recipients (comma separated)</Label>
-                <Textarea
-                  id="recipients"
-                  placeholder="email1@example.com, email2@example.com"
-                  value={recipients}
-                  onChange={(e) => setRecipients(e.target.value)}
-                  className="min-h-[100px]"
+                <Label htmlFor="sender-name">Sender Name (optional)</Label>
+                <Input
+                  id="sender-name"
+                  placeholder="Your Name or Company"
+                  value={senderName}
+                  onChange={(e) => setSenderName(e.target.value)}
                 />
-              </div>
-            </TabsContent>
-            <TabsContent value="csv" className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="csv-file">Upload CSV File</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="csv-file"
-                    type="file"
-                    accept=".csv"
-                    onChange={handleCsvUpload}
-                    className="flex-1"
-                  />
-                  <Button type="button" variant="outline" size="icon">
-                    <Upload className="w-4 h-4" />
-                  </Button>
-                </div>
                 <p className="text-sm text-gray-500">
-                  CSV should have email addresses in the first column.
+                  This will appear as the sender name in the recipient's inbox
                 </p>
               </div>
-
-              {csvFile && previewRecipients.length > 0 && (
-                <Alert>
-                  <AlertTitle>CSV Preview</AlertTitle>
-                  <AlertDescription>
-                    <p className="mb-2">
-                      Found {allRecipients.length} recipients (showing first 5):
-                    </p>
-                    <ul className="pl-5 list-disc">
-                      {previewRecipients.map((email, i) => (
-                        <li key={i}>{email}</li>
-                      ))}
-                      {allRecipients.length > 5 && <li>...</li>}
-                    </ul>
-                  </AlertDescription>
-                </Alert>
-              )}
-            </TabsContent>
-          </Tabs>
-
-          <div className="mt-4 space-y-2">
-            <Label>Email Details</Label>
-            <div className="p-3 border rounded-md">
-              <p>
-                <strong>Subject:</strong> {subject}
-              </p>
-              <p>
-                <strong>Content:</strong> HTML email with {content.length}{" "}
-                characters
-              </p>
             </div>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sending...
-              </>
-            ) : (
-              <>
-                <Send className="w-4 h-4 mr-2" /> Send Email
-              </>
-            )}
-          </Button>
-        </CardFooter>
-      </Card>
-    </form>
+
+            <Tabs value={sendMethod} onValueChange={setSendMethod}>
+              <TabsList className="mb-4">
+                <TabsTrigger value="manual">Enter Recipients</TabsTrigger>
+                <TabsTrigger value="csv">Upload CSV</TabsTrigger>
+              </TabsList>
+              <TabsContent value="manual" className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="recipients">
+                    Recipients (comma separated)
+                  </Label>
+                  <Textarea
+                    id="recipients"
+                    placeholder="email1@example.com, email2@example.com"
+                    value={recipients}
+                    onChange={(e) => setRecipients(e.target.value)}
+                    className="min-h-[100px]"
+                  />
+                </div>
+              </TabsContent>
+              <TabsContent value="csv" className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="csv-file">Upload CSV File</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="csv-file"
+                      type="file"
+                      accept=".csv"
+                      onChange={handleCsvUpload}
+                      className="flex-1"
+                    />
+                    <Button type="button" variant="outline" size="icon">
+                      <Upload className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <p className="text-sm text-gray-500">
+                    CSV should have email addresses in the first column.
+                  </p>
+                </div>
+
+                {csvFile && previewRecipients.length > 0 && (
+                  <Alert>
+                    <AlertTitle>CSV Preview</AlertTitle>
+                    <AlertDescription>
+                      <p className="mb-2">
+                        Found {allRecipients.length} recipients (showing first
+                        5):
+                      </p>
+                      <ul className="pl-5 list-disc">
+                        {previewRecipients.map((email, i) => (
+                          <li key={i}>{email}</li>
+                        ))}
+                        {allRecipients.length > 5 && <li>...</li>}
+                      </ul>
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </TabsContent>
+            </Tabs>
+
+            <div className="mt-4 space-y-2">
+              <Label>Email Details</Label>
+              <div className="p-3 border rounded-md">
+                <p>
+                  <strong>Subject:</strong> {subject}
+                </p>
+                <p>
+                  <strong>Content:</strong> HTML email with {content.length}{" "}
+                  characters
+                </p>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button type="submit" disabled={isLoading} className="w-full">
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sending...
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4 mr-2" /> Send Email
+                </>
+              )}
+            </Button>
+          </CardFooter>
+        </Card>
+      </form>
+
+      {/* Progress Dialog */}
+      <Dialog open={showProgress} onOpenChange={setShowProgress}>
+        <DialogContent className="sm:max-w-md">
+          <EmailSendingProgress
+            total={totalEmails}
+            current={currentProgress}
+            successful={successfulEmails}
+            failed={failedEmails}
+            isComplete={sendingComplete}
+            onClose={closeProgressDialog}
+          />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

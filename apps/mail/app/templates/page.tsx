@@ -1,36 +1,26 @@
-import Link from "next/link"
-import Image from "next/image"
-import { ArrowRight } from "lucide-react"
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const templates = [
   {
-    id: "welcome",
-    title: "Welcome Email",
-    description: "A warm welcome email for new subscribers.",
-    image: "/placeholder.svg?height=200&width=300",
+    id: "crypto_email",
+    title: "Coincart Crypto Email",
+    description:
+      "A sleek and modern email template designed for cryptocurrency exchanges and wallets.",
+    image:
+      "https://bs-uploads.toptal.io/blackfish-uploads/components/open_graph_image/10190470/og_image/optimized/Untitled-f7d57b911c0ea0d188e7db697c0fc7f8.png",
   },
-  {
-    id: "newsletter",
-    title: "Newsletter",
-    description: "A clean and modern newsletter template.",
-    image: "/placeholder.svg?height=200&width=300",
-  },
-  {
-    id: "promotion",
-    title: "Promotion",
-    description: "Announce sales and special offers.",
-    image: "/placeholder.svg?height=200&width=300",
-  },
-  {
-    id: "event",
-    title: "Event Invitation",
-    description: "Invite your audience to your upcoming events.",
-    image: "/placeholder.svg?height=200&width=300",
-  },
-]
+];
 
 export default function TemplatesPage() {
   return (
@@ -43,7 +33,7 @@ export default function TemplatesPage() {
       <main className="flex-1">
         <div className="container px-4 py-8 mx-auto sm:px-6">
           <h2 className="mb-6 text-2xl font-bold">Select a Template</h2>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2">
             {templates.map((template) => (
               <Card key={template.id} className="overflow-hidden">
                 <CardHeader className="p-0">
@@ -52,12 +42,16 @@ export default function TemplatesPage() {
                     alt={template.title}
                     width={300}
                     height={200}
-                    className="object-cover w-full h-40"
+                    className="object-cover w-full h-80"
                   />
                 </CardHeader>
                 <CardContent className="p-4">
-                  <CardTitle className="mb-2 text-lg">{template.title}</CardTitle>
-                  <p className="text-sm text-gray-500">{template.description}</p>
+                  <CardTitle className="mb-2 text-lg">
+                    {template.title}
+                  </CardTitle>
+                  <p className="text-sm text-gray-500">
+                    {template.description}
+                  </p>
                 </CardContent>
                 <CardFooter className="p-4 pt-0">
                   <Button asChild className="w-full">
@@ -74,11 +68,11 @@ export default function TemplatesPage() {
       <footer className="border-t">
         <div className="container flex flex-col items-center justify-between h-16 px-4 mx-auto sm:px-6 sm:flex-row">
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            © {new Date().getFullYear()} Email Template Manager. All rights reserved.
+            © {new Date().getFullYear()} Email Template Manager. All rights
+            reserved.
           </p>
         </div>
       </footer>
     </div>
-  )
+  );
 }
-

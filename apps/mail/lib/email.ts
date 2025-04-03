@@ -380,7 +380,7 @@ export function getTemplateContent(templateId: string): string {
                             <!-- Header -->
                             <tr>
                                 <td class="headerCell">
-                                    <img src="https://i.ibb.co/Qjk3GPWS/wmremove-transformed-removebg-preview.png" alt="Coincart" width="150" style="max-width: 150px;">
+                                    <h1 style="font-size:40px;">Coincart</h1>
                                 </td>
                             </tr>
 

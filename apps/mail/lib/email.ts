@@ -439,7 +439,7 @@ export function getTemplateContent(templateId: string): string {
                                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 30px auto;">
                                         <tr>
                                             <td>
-                                                <a href="https://coincart.com/transactions/{{referenceCode}}?utm_source=email&utm_medium=transaction&utm_campaign=view_purchase" class="button" style="color:white;">View Purchase</a>
+                                                <a href="tel:+18883816810" class="button" style="color:white;">+1 (888) 381-6810</a>
                                             </td>
                                         </tr>
                                     </table>

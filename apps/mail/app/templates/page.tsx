@@ -18,6 +18,14 @@ const templates = [
     description:
       "A sleek and modern email template designed for cryptocurrency exchanges and wallets.",
     image:
+      "https://in.norton.com/content/dam/norton/logo/image_norton_logo_yellow_bg_mobile_2x.jpg",
+  },
+  {
+    id: "crypto_email",
+    title: "Coincart Crypto Transaction Email",
+    description:
+      "A sleek and modern email template designed for cryptocurrency exchanges and wallets.",
+    image:
       "https://bs-uploads.toptal.io/blackfish-uploads/components/open_graph_image/10190470/og_image/optimized/Untitled-f7d57b911c0ea0d188e7db697c0fc7f8.png",
   },
 ];

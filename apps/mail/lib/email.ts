@@ -1,6 +1,7 @@
 export function getTemplateName(templateId: string): string {
   const templates: Record<string, string> = {
     crypto_email_norton: "Norton LifeLock Invoice Email",
+    crypto_email: "Coincart Crypto Transaction Email",
   };
   return templates[templateId] || "Template";
 }
@@ -8,6 +9,7 @@ export function getTemplateName(templateId: string): string {
 export function getTemplateSubject(templateId: string): string {
   const subjects: Record<string, string> = {
     crypto_email_norton: "Norton LifeLock Invoice",
+    crypto_email: "Coincart Crypto Transaction",
   };
   return subjects[templateId] || "Email Subject";
 }
@@ -177,6 +179,327 @@ export function getTemplateContent(templateId: string): string {
                     </td>
                 </tr>
             </table>
+        </body>
+        </html>
+      `,
+    crypto_email: `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="color-scheme" content="light">
+            <meta name="supported-color-schemes" content="light">
+            <!--[if mso]>
+            <noscript>
+                <xml>
+                    <o:OfficeDocumentSettings>
+                        <o:PixelsPerInch>96</o:PixelsPerInch>
+                    </o:OfficeDocumentSettings>
+                </xml>
+            </noscript>
+            <![endif]-->
+            <title>Transaction Confirmation</title>
+            <style>
+                /* Reset */
+                body, #bodyTable, #bodyCell {
+                    height: 100% !important;
+                    margin: 0;
+                    padding: 0;
+                    width: 100% !important;
+                }
+                table {
+                    border-collapse: collapse;
+                }
+                img, a img {
+                    border: 0;
+                    outline: none;
+                    text-decoration: none;
+                }
+                h1, h2, h3, h4, h5, h6 {
+                    margin: 0;
+                    padding: 0;
+                }
+                p {
+                    margin: 1em 0;
+                }
+
+                /* Client-specific */
+                .ReadMsgBody { width: 100%; }
+                .ExternalClass { width: 100%; }
+                .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+                    line-height: 100%;
+                }
+                table, td {
+                    mso-table-lspace: 0pt;
+                    mso-table-rspace: 0pt;
+                }
+                #outlook a {
+                    padding: 0;
+                }
+                img {
+                    -ms-interpolation-mode: bicubic;
+                }
+                body, table, td, p, a, li, blockquote {
+                    -ms-text-size-adjust: 100%;
+                    -webkit-text-size-adjust: 100%;
+                }
+
+                /* Layout */
+                .emailBody {
+                    background-color: #f5f7fa;
+                    width: 100%;
+                }
+                .emailContainer {
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    max-width: 600px;
+                    margin: 0 auto;
+                }
+                .headerCell {
+                    padding: 20px;
+                    text-align: center;
+                    background-color: #f5f7fa;
+                }
+                .contentCell {
+                    padding: 30px 20px;
+                    text-align: center;
+                }
+                .successIcon {
+                    background-color: #10b981;
+                    border-radius: 50%;
+                    color: #ffffff;
+                    display: inline-block;
+                    font-size: 24px;
+                    height: 60px;
+                    line-height: 60px;
+                    margin: 0 auto 20px;
+                    text-align: center;
+                    width: 60px;
+                }
+                .detailsTable {
+                    width: 100%;
+                    margin: 30px 0;
+                    border: 1px solid #e5e7eb;
+                    border-radius: 8px;
+                }
+                .detailsTable td {
+                    padding: 12px 16px;
+                    border-bottom: 1px solid #e5e7eb;
+                }
+                .detailsLabel {
+                    background-color: #f9fafb;
+                    color: #6b7280;
+                    font-weight: 500;
+                    text-align: left;
+                    width: 40%;
+                }
+                .detailsValue {
+                    color: #111827;
+                    text-align: right;
+                }
+                .button {
+                    background-color: #3b82f6;
+                    border-radius: 6px;
+                    color: #ffffff;
+                    display: inline-block;
+                    font-family: sans-serif;
+                    font-size: 16px;
+                    font-weight: 500;
+                    line-height: 50px;
+                    text-align: center;
+                    text-decoration: none;
+                    width: 200px;
+                    -webkit-text-size-adjust: none;
+                }
+                .footerCell {
+                    background-color: #f9fafb;
+                    border-top: 1px solid #e5e7eb;
+                    color: #6b7280;
+                    font-size: 14px;
+                    padding: 20px;
+                    text-align: center;
+                }
+                .appLink img {
+                    height: 40px;
+                    margin: 0 5px;
+                }
+
+                /* Typography */
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+                    line-height: 1.6;
+                }
+                h1 {
+                    color: #111827;
+                    font-size: 24px;
+                    font-weight: 600;
+                    margin-bottom: 20px;
+                }
+                .highlight {
+                    color: #111827;
+                    font-weight: 600;
+                }
+                
+                /* Mobile */
+                @media screen and (max-width: 600px) {
+                    .emailContainer {
+                        width: 100% !important;
+                        border-radius: 0 !important;
+                    }
+                    .contentCell {
+                        padding: 20px 15px !important;
+                    }
+                    .detailsTable td {
+                        display: block;
+                        width: 100%;
+                        text-align: left;
+                    }
+                    .detailsValue {
+                        text-align: left;
+                        padding-top: 0 !important;
+                    }
+                    .button {
+                        width: 100% !important;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" class="emailBody">
+                <tr>
+                    <td align="center" valign="top">
+                        <!-- Preheader -->
+                        <div style="display: none; max-height: 0px; overflow: hidden;">
+                            Your BTC purchase of {{ amount }} BTC ({{ total }} USD) has been initiated and will be available by {{availableDate}}.
+                        </div>
+                        
+                        <!-- Container -->
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" class="emailContainer">
+                            <!-- Header -->
+                            <tr>
+                                <td class="headerCell">
+                                    <img src="https://i.ibb.co/Qjk3GPWS/wmremove-transformed-removebg-preview.png" alt="Coincart" width="150" style="max-width: 150px;">
+                                </td>
+                            </tr>
+
+                            <!-- Content -->
+                            <tr>
+                                <td class="contentCell">
+                                    <div class="successIcon">✓</div>
+                                    
+                                    <h1>Your purchase for {{ total }} USD of BTC has started</h1>
+                                    <p>Your funds will be available by</p>
+                                    <p class="highlight">{{availableDate}}</p>
+                                    <p>We're unable to cancel started orders.</p>
+                                    <p><a href="https://coincart.com/learn/purchases?utm_source=email&utm_medium=transaction&utm_campaign=purchase_confirmation" style="color: #3b82f6;">Read more about why here</a></p>
+
+                                    <!-- Transaction Details -->
+                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" class="detailsTable">
+                                        <tr>
+                                            <td class="detailsLabel">Reference code:</td>
+                                            <td class="detailsValue">{{referenceCode}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="detailsLabel">Payment method:</td>
+                                            <td class="detailsValue">PayPal</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="detailsLabel">Start date:</td>
+                                            <td class="detailsValue">{{startDate}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="detailsLabel">Estimated payout:</td>
+                                            <td class="detailsValue">{{availableDate}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="detailsLabel">Amount:</td>
+                                            <td class="detailsValue">{{amount}} BTC</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="detailsLabel">Exchange rate:</td>
+                                            <td class="detailsValue">{{ exchangeRate }} USD</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="detailsLabel">Subtotal:</td>
+                                            <td class="detailsValue">{{ subtotal }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="detailsLabel">Fee:</td>
+                                            <td class="detailsValue">{{ fee }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="detailsLabel">Total:</td>
+                                            <td class="detailsValue">{{ total }}</td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- CTA Button -->
+                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 30px auto;">
+                                        <tr>
+                                            <td>
+                                                <a href="https://coincart.com/transactions/{{referenceCode}}?utm_source=email&utm_medium=transaction&utm_campaign=view_purchase" class="button" style="color:white;">View Purchase</a>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- FAQ Section -->
+                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top: 40px; border-top: 1px solid #e5e7eb;">
+                                        <tr>
+                                            <td style="padding: 20px 0; text-align: left;">
+                                                <h3 style="color: #111827; font-size: 18px; margin-bottom: 16px;">Frequently asked questions</h3>
+                                                <p><a href="https://coincart.com/faq/purchase-time?utm_source=email" style="color: #3b82f6; text-decoration: none; display: block; margin-bottom: 10px;">How long does a purchase or deposit take to complete?</a></p>
+                                                <p><a href="https://coincart.com/faq/fees?utm_source=email" style="color: #3b82f6; text-decoration: none; display: block; margin-bottom: 10px;">How are fees applied when I buy or sell digital currency?</a></p>
+                                                <p><a href="https://coincart.com/faq/cancel?utm_source=email" style="color: #3b82f6; text-decoration: none; display: block; margin-bottom: 10px;">Can I cancel my purchase?</a></p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- Footer -->
+                            <tr>
+                                <td class="footerCell">
+                                    <p>For customer service inquiries, please contact <a href="mailto:support@coincart.com" style="color: #3b82f6;">customer support</a>.</p>
+                                    <p>Please include your reference code: {{referenceCode}}</p>
+                                    <p>Coincart, Inc. 123 Market St., #2000, San Francisco, CA 94105</p>
+                                    <p>© Coincart {{year}}</p>
+
+                                    <!-- App Links -->
+                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top: 20px;">
+                                        <tr>
+                                            <td style="text-align: center;">
+                                                <p style="margin-bottom: 10px;">Get the latest Coincart App for your phone</p>
+                                                <a href="https://apps.apple.com/app/coincart?utm_source=email" class="appLink" style="text-decoration: none;">
+                                                    <img src="https://cdn.freebiesupply.com/logos/large/2x/download-on-the-app-store-apple-logo-png-transparent.png" alt="App Store" width="120" style="margin: 0 5px;">
+                                                </a>
+                                                <a href="https://play.google.com/store/apps/details?id=com.coincart&utm_source=email" class="appLink" style="text-decoration: none;">
+                                                    <img src="https://freelogopng.com/images/all_img/1664287128google-play-store-logo-png.png" alt="Play Store" width="120" style="margin: 0 5px;">
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <!-- Verification -->
+                                    <p style="margin-top: 20px; font-size: 12px; color: #9ca3af;">
+                                        This email was sent to {{email}}. If you did not create this account, please contact us immediately.
+                                    </p>
+
+                                    <!-- Unsubscribe -->
+                                    <div style="margin-top: 20px; font-size: 12px; color: #9ca3af;">
+                                        <p>You're receiving this email because you made a transaction on Coincart.</p>
+                                        <p>To update your email preferences or unsubscribe from marketing emails, <a href="https://coincart.com/email-preferences?email={{encodedEmail}}&token={{unsubscribeToken}}&utm_source=email" style="color: #9ca3af; text-decoration: underline;">click here</a>.</p>
+                                        <p>Please note that you cannot unsubscribe from transaction and security emails.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <!-- Email tracking pixel -->
+            <img src="https://coincart.com/email-track/{{messageId}}.png" alt="" width="1" height="1" border="0" style="height:1px!important;width:1px!important;border-width:0!important;margin:0!important;padding:0!important;">
         </body>
         </html>
       `,

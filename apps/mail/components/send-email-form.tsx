@@ -22,13 +22,21 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { EmailSendingProgress } from "./email-sending-progress";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { type TemplateData, renderTemplate } from "@/lib/template-utils";
 
 interface SendEmailFormProps {
   content: string;
   subject: string;
+  templateData?: TemplateData;
+  templateVariables?: string[];
 }
 
-export function SendEmailForm({ content, subject }: SendEmailFormProps) {
+export function SendEmailForm({
+  content,
+  subject,
+  templateData = {},
+  templateVariables = [],
+}: SendEmailFormProps) {
   const { toast } = useToast();
   const [recipients, setRecipients] = useState("");
   const [senderName, setSenderName] = useState("");
@@ -39,7 +47,6 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
   const [allRecipients, setAllRecipients] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  // Progress tracking
   const [showProgress, setShowProgress] = useState(false);
   const [sendingComplete, setSendingComplete] = useState(false);
   const [currentProgress, setCurrentProgress] = useState(0);
@@ -48,6 +55,10 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
   const [failedEmails, setFailedEmails] = useState<
     { email: string; reason: string }[]
   >([]);
+
+  const [csvData, setCsvData] = useState<Record<string, TemplateData[]>>({});
+  const [csvHeaders, setCsvHeaders] = useState<string[]>([]);
+  const [usePersonalization, setUsePersonalization] = useState(false);
 
   const handleCsvUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -61,18 +72,62 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target?.result as string;
-      const emails = text
-        .split(/\r?\n/)
-        .map((line) => line.split(",")[0]?.trim())
-        .filter((email) => email && isValidEmail(email));
+      const lines = text.split(/\r?\n/);
+
+      if (lines.length === 0) {
+        setError("CSV file is empty");
+        return;
+      }
+
+      const headers = lines[0].split(",").map((h) => h.trim());
+      setCsvHeaders(headers);
+
+      const emailColumnIndex = headers.findIndex(
+        (h) => h.toLowerCase() === "email" || h.toLowerCase().includes("email")
+      );
+
+      if (emailColumnIndex === -1) {
+        setError("CSV must contain an 'email' column");
+        return;
+      }
+
+      const emails: string[] = [];
+      const data: Record<string, TemplateData[]> = {};
+
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+
+        const values = lines[i].split(",").map((v) => v.trim());
+        const email = values[emailColumnIndex];
+
+        if (email && isValidEmail(email)) {
+          emails.push(email);
+
+          const rowData: TemplateData = {};
+          headers.forEach((header, index) => {
+            if (values[index]) {
+              rowData[header] = values[index];
+            }
+          });
+
+          data[email] = [rowData];
+        }
+      }
 
       setAllRecipients(emails);
       setPreviewRecipients(emails.slice(0, 5));
+      setCsvData(data);
 
       if (emails.length === 0) {
         setError("No valid email addresses found in the CSV file");
       } else {
         setError(null);
+
+        const hasTemplateVariables = templateVariables.some((variable) =>
+          headers.includes(variable)
+        );
+
+        setUsePersonalization(hasTemplateVariables);
       }
     };
     reader.readAsText(file);
@@ -106,11 +161,13 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
   };
 
   const sendEmailsInBatches = async (recipientsArray: string[]) => {
+    // Reset progress tracking
     resetProgress();
     setShowProgress(true);
     setTotalEmails(recipientsArray.length);
 
-    const batchSize = 500;
+    // For very large lists, break into manageable batches
+    const batchSize = 500; // Process 500 emails per API call
     const totalBatches = Math.ceil(recipientsArray.length / batchSize);
 
     for (let i = 0; i < recipientsArray.length; i += batchSize) {
@@ -118,15 +175,41 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
       const batchIndex = Math.floor(i / batchSize);
 
       try {
+        // Prepare personalized content for each recipient if using CSV data
+        const personalizedBatch = batch.map((email) => {
+          if (usePersonalization && sendMethod === "csv" && csvData[email]) {
+            // Merge template data with CSV data for this recipient
+            const recipientData = { ...templateData, ...csvData[email][0] };
+
+            // Render personalized content and subject
+            const personalizedContent = renderTemplate(content, recipientData);
+            const personalizedSubject = renderTemplate(subject, recipientData);
+
+            return {
+              email,
+              content: personalizedContent,
+              subject: personalizedSubject,
+            };
+          } else {
+            // Use global template data
+            const renderedContent = renderTemplate(content, templateData);
+            const renderedSubject = renderTemplate(subject, templateData);
+
+            return {
+              email,
+              content: renderedContent,
+              subject: renderedSubject,
+            };
+          }
+        });
+
         const response = await fetch("/api/send-email-batch", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            subject,
-            content,
-            batch,
+            personalizedBatch,
             batchIndex,
             totalBatches,
             senderName,
@@ -139,12 +222,14 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
           throw new Error(data.error || "Failed to send batch");
         }
 
+        // Update progress
         setSuccessfulEmails((prev) => [...prev, ...data.results.successful]);
         setFailedEmails((prev) => [...prev, ...data.results.failed]);
         setCurrentProgress((prev) => prev + batch.length);
       } catch (error: any) {
         console.error("Error sending batch:", error);
 
+        // Mark all emails in this batch as failed
         const newFailures = batch.map((email) => ({
           email,
           reason: error.message || "Failed to process batch",
@@ -157,6 +242,7 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
 
     setSendingComplete(true);
 
+    // Show toast with summary
     toast({
       title: "Email Sending Complete",
       description: `Successfully sent ${successfulEmails.length} emails. ${failedEmails.length} failed.`,
@@ -178,15 +264,31 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
 
     try {
       if (recipientsArray.length <= 100) {
+        const personalizedBatch = recipientsArray.map((email) => {
+          if (usePersonalization && sendMethod === "csv" && csvData[email]) {
+            const recipientData = { ...templateData, ...csvData[email][0] };
+
+            return {
+              email,
+              content: renderTemplate(content, recipientData),
+              subject: renderTemplate(subject, recipientData),
+            };
+          } else {
+            return {
+              email,
+              content: renderTemplate(content, templateData),
+              subject: renderTemplate(subject, templateData),
+            };
+          }
+        });
+
         const response = await fetch("/api/send-email", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            subject,
-            content,
-            recipients: recipientsArray,
+            personalizedBatch,
             senderName,
           }),
         });
@@ -197,11 +299,13 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
           throw new Error(data.error || "Failed to send emails");
         }
 
+        // Show success message for small batches
         toast({
           title: "Emails Sent Successfully",
           description: `Your emails have been sent to ${data.totalSuccessful} recipients. ${data.totalFailed} failed.`,
         });
 
+        // Update progress tracking for UI consistency
         setTotalEmails(recipientsArray.length);
         setSuccessfulEmails(data.results.successful);
         setFailedEmails(data.results.failed);
@@ -209,9 +313,11 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
         setSendingComplete(true);
         setShowProgress(true);
       } else {
+        // For larger lists, use batch processing
         await sendEmailsInBatches(recipientsArray);
       }
 
+      // Reset form
       if (sendMethod === "manual") {
         setRecipients("");
       } else {
@@ -323,6 +429,26 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
                     </AlertDescription>
                   </Alert>
                 )}
+
+                {usePersonalization && (
+                  <Alert className="bg-blue-50 border-blue-200">
+                    <AlertTitle className="text-blue-800">
+                      Personalization Enabled
+                    </AlertTitle>
+                    <AlertDescription className="text-blue-700">
+                      <p className="mb-2">
+                        Your CSV contains template variables that will be used
+                        for personalization.
+                      </p>
+                      <p>
+                        Available variables:{" "}
+                        {csvHeaders
+                          .filter((h) => templateVariables.includes(h))
+                          .join(", ")}
+                      </p>
+                    </AlertDescription>
+                  </Alert>
+                )}
               </TabsContent>
             </Tabs>
 
@@ -336,6 +462,12 @@ export function SendEmailForm({ content, subject }: SendEmailFormProps) {
                   <strong>Content:</strong> HTML email with {content.length}{" "}
                   characters
                 </p>
+                {templateVariables.length > 0 && (
+                  <p>
+                    <strong>Template Variables:</strong>{" "}
+                    {templateVariables.join(", ")}
+                  </p>
+                )}
               </div>
             </div>
           </CardContent>

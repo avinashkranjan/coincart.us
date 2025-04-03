@@ -5,28 +5,23 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
 export async function POST(request: NextRequest) {
   try {
-    const { subject, content, recipients, senderName, batchId } =
-      await request.json();
+    const { personalizedBatch, senderName } = await request.json();
 
-    if (!subject || !content || !recipients || !recipients.length) {
+    if (!personalizedBatch || !personalizedBatch.length) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    const emailsToProcess = recipients;
-
-    const batchSize = 100;
-
-    const messages = emailsToProcess.map((recipient: any) => ({
-      to: recipient,
+    const messages = personalizedBatch.map((item: any) => ({
+      to: item.email,
       from: {
         email: "buycrypto@coincart.us",
         name: senderName || "Coincart",
       },
-      subject: subject,
-      html: content,
+      subject: item.subject,
+      html: item.content,
     }));
 
     const results = {
@@ -34,11 +29,13 @@ export async function POST(request: NextRequest) {
       failed: [] as { email: string; reason: string }[],
     };
 
+    const batchSize = 100;
     for (let i = 0; i < messages.length; i += batchSize) {
       const batch = messages.slice(i, i + batchSize);
       try {
         await sgMail.send(batch);
-        batch.forEach((msg: { to: string | string[] }) => {
+
+        batch.forEach((msg: any) => {
           results.successful.push(
             typeof msg.to === "string" ? msg.to : msg.to[0]
           );
@@ -51,7 +48,7 @@ export async function POST(request: NextRequest) {
         ) {
           const sgErrors = error.response.body.errors;
 
-          batch.forEach((msg: { to: any[] }, idx: string | number) => {
+          batch.forEach((msg: any, idx: string | number) => {
             const email = typeof msg.to === "string" ? msg.to : msg.to[0];
             const errorMsg = sgErrors[idx]?.message || "Unknown error";
             results.failed.push({ email, reason: errorMsg });

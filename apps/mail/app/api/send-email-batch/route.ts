@@ -1,7 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
 import sgMail from "@sendgrid/mail";
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+sgMail.setApiKey(
+  "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"
+);
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,8 +20,10 @@ export async function POST(request: NextRequest) {
     const messages = personalizedBatch.map(
       (item: { email: any; subject: any; content: any }) => ({
         to: item.email,
-        email: "buycrypto@coincart.us",
-        name: senderName || "Coincart",
+        from: {
+          email: "buycrypto@coincart.us",
+          name: senderName || "Coincart",
+        },
         subject: item.subject,
         html: item.content,
       })

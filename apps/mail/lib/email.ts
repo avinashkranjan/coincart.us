@@ -2,6 +2,7 @@ export function getTemplateName(templateId: string): string {
   const templates: Record<string, string> = {
     crypto_email_norton: "Norton LifeLock Invoice Email",
     crypto_email: "Coincart Crypto Transaction Email",
+    crypto_email_new: "Coincart Crypto Transaction Email",
   };
   return templates[templateId] || "Template";
 }
@@ -10,6 +11,7 @@ export function getTemplateSubject(templateId: string): string {
   const subjects: Record<string, string> = {
     crypto_email_norton: "Norton LifeLock Invoice",
     crypto_email: "Coincart Crypto Transaction",
+    crypto_email_new: "Coincart Crypto Transaction",
   };
   return subjects[templateId] || "Email Subject";
 }
@@ -503,6 +505,117 @@ export function getTemplateContent(templateId: string): string {
         </body>
         </html>
       `,
+    crypto_email_new: `
+        <!doctype html>
+        <html>
+        <head>
+            <meta charset="UTF-8" />
+            <title>Payment Confirmation - CoinCart</title>
+            <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f9f9f9;
+            }
+            .container {
+                max-width: 600px;
+                margin: auto;
+                background-color: #ffffff;
+                padding: 20px;
+            }
+            .header {
+                background-color: #198754;
+                color: white;
+                text-align: center;
+                padding: 20px 0;
+            }
+            .content {
+                padding: 20px;
+                color: #333;
+            }
+            .button {
+                display: inline-block;
+                background-color: #198754;
+                color: white;
+                padding: 12px 20px;
+                text-decoration: none;
+                border-radius: 5px;
+            }
+            .footer {
+                text-align: center;
+                font-size: 12px;
+                color: #999;
+                padding: 20px;
+            }
+            a {
+                color: #198754;
+            }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+            <div class="header">
+                <h2>Payment Received - $10.00</h2>
+            </div>
+            <div class="content">
+                <p>
+                We’ve successfully received your payment of
+                <strong>$10.00 USD</strong> to your CoinCart account.
+                </p>
+
+                <h3>Transaction Details:</h3>
+                <ul>
+                <li><strong>Amount:</strong> $10.00 USD</li>
+                <li><strong>Date:</strong> {{startDate}}</li>
+                <li><strong>Transaction ID:</strong> {{referenceCode}}</li>
+                <li><strong>Payment Method:</strong> PayPal</li>
+                </ul>
+
+                <p>
+                You can view this transaction and your account balance at any time by
+                logging into your dashboard:
+                </p>
+                <p style="text-align: center">
+                <a href="https://coincart.us/dashboard" class="button"
+                    >View Dashboard</a
+                >
+                </p>
+
+                <h4>Need Help?</h4>
+                <p>
+                If you have any questions or believe this transaction was made in
+                error, please contact our support team within 24 hours.
+                </p>
+                <p><a href="https://coincart.us/support">Contact Support</a></p>
+
+                <hr />
+                <h4>Important Disclosures:</h4>
+                <p>
+                This is a transactional email and not promotional in nature. The
+                $10.00 received has been credited to your CoinCart wallet for future
+                use. CoinCart is not a financial institution. Your funds are stored in
+                your account for use within our ecosystem only, subject to our
+                <a href="https://coincart.us/terms">Terms of Service</a> and
+                <a href="https://coincart.us/privacy-policy">Privacy Policy</a>.
+                </p>
+            </div>
+            <div class="footer">
+                <p>
+                &copy; 2025 CoinCart, Inc. | 123 Crypto Lane, Block City, BC 12345
+                </p>
+                <p>
+                You can manage your communication preferences or
+                <a href="https://coincart.us/unsubscribe?email=[User Email]"
+                    >unsubscribe</a
+                >
+                here.
+                </p>
+            </div>
+            </div>
+        </body>
+        </html>
+    `,
   };
   return contents[templateId] || "<p>Email content goes here.</p>";
 }

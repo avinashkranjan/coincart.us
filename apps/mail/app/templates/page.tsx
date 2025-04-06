@@ -28,6 +28,14 @@ const templates = [
     image:
       "https://bs-uploads.toptal.io/blackfish-uploads/components/open_graph_image/10190470/og_image/optimized/Untitled-f7d57b911c0ea0d188e7db697c0fc7f8.png",
   },
+  {
+    id: "crypto_email_new",
+    title: "Coincart Crypto Transaction Email",
+    description:
+      "A sleek and modern email template designed for cryptocurrency exchanges and wallets.",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbX5GaQV1BxN6kWErnjfkka_wWZ-LVcb40JA&s",
+  },
 ];
 
 export default function TemplatesPage() {
@@ -41,7 +49,7 @@ export default function TemplatesPage() {
       <main className="flex-1">
         <div className="container px-4 py-8 mx-auto sm:px-6">
           <h2 className="mb-6 text-2xl font-bold">Select a Template</h2>
-          <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
             {templates.map((template) => (
               <Card key={template.id} className="overflow-hidden">
                 <CardHeader className="p-0">
@@ -73,14 +81,6 @@ export default function TemplatesPage() {
           </div>
         </div>
       </main>
-      <footer className="border-t">
-        <div className="container flex flex-col items-center justify-between h-16 px-4 mx-auto sm:px-6 sm:flex-row">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            © {new Date().getFullYear()} Email Template Manager. All rights
-            reserved.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

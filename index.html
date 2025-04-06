@@ -1,496 +1,109 @@
 <!doctype html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="color-scheme" content="light" />
-    <meta name="supported-color-schemes" content="light" />
-    <!--[if mso]>
-      <noscript>
-        <xml>
-          <o:OfficeDocumentSettings>
-            <o:PixelsPerInch>96</o:PixelsPerInch>
-          </o:OfficeDocumentSettings>
-        </xml>
-      </noscript>
-    <![endif]-->
-    <title>Transaction Confirmation</title>
+    <title>Payment Confirmation - CoinCart</title>
     <style>
-      /* Reset */
-      body,
-      #bodyTable,
-      #bodyCell {
-        height: 100% !important;
+      body {
+        font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
-        width: 100% !important;
+        background-color: #f9f9f9;
       }
-      table {
-        border-collapse: collapse;
-      }
-      img,
-      a img {
-        border: 0;
-        outline: none;
-        text-decoration: none;
-      }
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6 {
-        margin: 0;
-        padding: 0;
-      }
-      p {
-        margin: 1em 0;
-      }
-
-      /* Client-specific */
-      .ReadMsgBody {
-        width: 100%;
-      }
-      .ExternalClass {
-        width: 100%;
-      }
-      .ExternalClass,
-      .ExternalClass p,
-      .ExternalClass span,
-      .ExternalClass font,
-      .ExternalClass td,
-      .ExternalClass div {
-        line-height: 100%;
-      }
-      table,
-      td {
-        mso-table-lspace: 0pt;
-        mso-table-rspace: 0pt;
-      }
-      #outlook a {
-        padding: 0;
-      }
-      img {
-        -ms-interpolation-mode: bicubic;
-      }
-      body,
-      table,
-      td,
-      p,
-      a,
-      li,
-      blockquote {
-        -ms-text-size-adjust: 100%;
-        -webkit-text-size-adjust: 100%;
-      }
-
-      /* Layout */
-      .emailBody {
-        background-color: #f5f7fa;
-        width: 100%;
-      }
-      .emailContainer {
-        background-color: #ffffff;
-        border-radius: 8px;
+      .container {
         max-width: 600px;
-        margin: 0 auto;
-      }
-      .headerCell {
+        margin: auto;
+        background-color: #ffffff;
         padding: 20px;
+      }
+      .header {
+        background-color: #198754;
+        color: white;
         text-align: center;
-        background-color: #f5f7fa;
+        padding: 20px 0;
       }
-      .contentCell {
-        padding: 30px 20px;
-        text-align: center;
-      }
-      .successIcon {
-        background-color: #10b981;
-        border-radius: 50%;
-        color: #ffffff;
-        display: inline-block;
-        font-size: 24px;
-        height: 60px;
-        line-height: 60px;
-        margin: 0 auto 20px;
-        text-align: center;
-        width: 60px;
-      }
-      .detailsTable {
-        width: 100%;
-        margin: 30px 0;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-      }
-      .detailsTable td {
-        padding: 12px 16px;
-        border-bottom: 1px solid #e5e7eb;
-      }
-      .detailsLabel {
-        background-color: #f9fafb;
-        color: #6b7280;
-        font-weight: 500;
-        text-align: left;
-        width: 40%;
-      }
-      .detailsValue {
-        color: #111827;
-        text-align: right;
+      .content {
+        padding: 20px;
+        color: #333;
       }
       .button {
-        background-color: #3b82f6;
-        border-radius: 6px;
-        color: #ffffff;
         display: inline-block;
-        font-family: sans-serif;
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 50px;
-        text-align: center;
+        background-color: #198754;
+        color: white;
+        padding: 12px 20px;
         text-decoration: none;
-        width: 200px;
-        -webkit-text-size-adjust: none;
+        border-radius: 5px;
       }
-      .footerCell {
-        background-color: #f9fafb;
-        border-top: 1px solid #e5e7eb;
-        color: #6b7280;
-        font-size: 14px;
-        padding: 20px;
+      .footer {
         text-align: center;
+        font-size: 12px;
+        color: #999;
+        padding: 20px;
       }
-      .appLink img {
-        height: 40px;
-        margin: 0 5px;
-      }
-
-      /* Typography */
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          Helvetica, Arial, sans-serif;
-        line-height: 1.6;
-      }
-      h1 {
-        color: #111827;
-        font-size: 24px;
-        font-weight: 600;
-        margin-bottom: 20px;
-      }
-      .highlight {
-        color: #111827;
-        font-weight: 600;
-      }
-
-      /* Mobile */
-      @media screen and (max-width: 600px) {
-        .emailContainer {
-          width: 100% !important;
-          border-radius: 0 !important;
-        }
-        .contentCell {
-          padding: 20px 15px !important;
-        }
-        .detailsTable td {
-          display: block;
-          width: 100%;
-          text-align: left;
-        }
-        .detailsValue {
-          text-align: left;
-          padding-top: 0 !important;
-        }
-        .button {
-          width: 100% !important;
-        }
+      a {
+        color: #198754;
       }
     </style>
   </head>
   <body>
-    <table
-      role="presentation"
-      cellpadding="0"
-      cellspacing="0"
-      border="0"
-      class="emailBody"
-    >
-      <tr>
-        <td align="center" valign="top">
-          <!-- Preheader -->
-          <div style="display: none; max-height: 0px; overflow: hidden">
-            Your BTC purchase of {{ amount }} BTC ({{ total }} USD) has been
-            initiated and will be available by {{availableDate}}.
-          </div>
+    <div class="container">
+      <div class="header">
+        <h2>Payment Received - $10.00</h2>
+      </div>
+      <div class="content">
+        <p>
+          We’ve successfully received your payment of
+          <strong>$10.00 USD</strong> to your CoinCart account.
+        </p>
 
-          <!-- Container -->
-          <table
-            role="presentation"
-            cellpadding="0"
-            cellspacing="0"
-            border="0"
-            class="emailContainer"
+        <h3>Transaction Details:</h3>
+        <ul>
+          <li><strong>Amount:</strong> $10.00 USD</li>
+          <li><strong>Date:</strong> {{startDate}}</li>
+          <li><strong>Transaction ID:</strong> {{referenceCode}}</li>
+          <li><strong>Payment Method:</strong> PayPal</li>
+        </ul>
+
+        <p>
+          You can view this transaction and your account balance at any time by
+          logging into your dashboard:
+        </p>
+        <p style="text-align: center">
+          <a href="https://coincart.us/dashboard" class="button"
+            >View Dashboard</a
           >
-            <!-- Header -->
-            <tr>
-              <td class="headerCell">
-                <img
-                  src="https://i.ibb.co/Qjk3GPWS/wmremove-transformed-removebg-preview.png"
-                  alt="Coincart"
-                  width="150"
-                  style="max-width: 150px"
-                />
-              </td>
-            </tr>
+        </p>
 
-            <!-- Content -->
-            <tr>
-              <td class="contentCell">
-                <div class="successIcon">✓</div>
+        <h4>Need Help?</h4>
+        <p>
+          If you have any questions or believe this transaction was made in
+          error, please contact our support team within 24 hours.
+        </p>
+        <p><a href="https://coincart.us/support">Contact Support</a></p>
 
-                <h1>Your purchase for {{ total }} USD of BTC has started</h1>
-                <p>Your funds will be available by</p>
-                <p class="highlight">{{availableDate}}</p>
-                <p>We're unable to cancel started orders.</p>
-                <p>
-                  <a
-                    href="https://coincart.com/learn/purchases?utm_source=email&utm_medium=transaction&utm_campaign=purchase_confirmation"
-                    style="color: #3b82f6"
-                    >Read more about why here</a
-                  >
-                </p>
-
-                <!-- Transaction Details -->
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  class="detailsTable"
-                >
-                  <tr>
-                    <td class="detailsLabel">Reference code:</td>
-                    <td class="detailsValue">{{referenceCode}}</td>
-                  </tr>
-                  <tr>
-                    <td class="detailsLabel">Payment method:</td>
-                    <td class="detailsValue">PayPal</td>
-                  </tr>
-                  <tr>
-                    <td class="detailsLabel">Start date:</td>
-                    <td class="detailsValue">{{startDate}}</td>
-                  </tr>
-                  <tr>
-                    <td class="detailsLabel">Estimated payout:</td>
-                    <td class="detailsValue">{{availableDate}}</td>
-                  </tr>
-                  <tr>
-                    <td class="detailsLabel">Amount:</td>
-                    <td class="detailsValue">{{amount}} BTC</td>
-                  </tr>
-                  <tr>
-                    <td class="detailsLabel">Exchange rate:</td>
-                    <td class="detailsValue">{{ exchangeRate }} USD</td>
-                  </tr>
-                  <tr>
-                    <td class="detailsLabel">Subtotal:</td>
-                    <td class="detailsValue">{{ subtotal }}</td>
-                  </tr>
-                  <tr>
-                    <td class="detailsLabel">Fee:</td>
-                    <td class="detailsValue">{{ fee }}</td>
-                  </tr>
-                  <tr>
-                    <td class="detailsLabel">Total:</td>
-                    <td class="detailsValue">{{ total }}</td>
-                  </tr>
-                </table>
-
-                <!-- CTA Button -->
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  style="margin: 30px auto"
-                >
-                  <tr>
-                    <td>
-                      <a
-                        href="https://coincart.com/transactions/{{referenceCode}}?utm_source=email&utm_medium=transaction&utm_campaign=view_purchase"
-                        class="button"
-                        >View Purchase</a
-                      >
-                    </td>
-                  </tr>
-                </table>
-
-                <!-- FAQ Section -->
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  width="100%"
-                  style="margin-top: 40px; border-top: 1px solid #e5e7eb"
-                >
-                  <tr>
-                    <td style="padding: 20px 0; text-align: left">
-                      <h3
-                        style="
-                          color: #111827;
-                          font-size: 18px;
-                          margin-bottom: 16px;
-                        "
-                      >
-                        Frequently asked questions
-                      </h3>
-                      <p>
-                        <a
-                          href="https://coincart.com/faq/purchase-time?utm_source=email"
-                          style="
-                            color: #3b82f6;
-                            text-decoration: none;
-                            display: block;
-                            margin-bottom: 10px;
-                          "
-                          >How long does a purchase or deposit take to
-                          complete?</a
-                        >
-                      </p>
-                      <p>
-                        <a
-                          href="https://coincart.com/faq/fees?utm_source=email"
-                          style="
-                            color: #3b82f6;
-                            text-decoration: none;
-                            display: block;
-                            margin-bottom: 10px;
-                          "
-                          >How are fees applied when I buy or sell digital
-                          currency?</a
-                        >
-                      </p>
-                      <p>
-                        <a
-                          href="https://coincart.com/faq/cancel?utm_source=email"
-                          style="
-                            color: #3b82f6;
-                            text-decoration: none;
-                            display: block;
-                            margin-bottom: 10px;
-                          "
-                          >Can I cancel my purchase?</a
-                        >
-                      </p>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-
-            <!-- Footer -->
-            <tr>
-              <td class="footerCell">
-                <p>
-                  For customer service inquiries, please contact
-                  <a href="mailto:support@coincart.com" style="color: #3b82f6"
-                    >customer support</a
-                  >.
-                </p>
-                <p>Please include your reference code: {{referenceCode}}</p>
-                <p>
-                  Coincart, Inc. 123 Market St., #2000, San Francisco, CA 94105
-                </p>
-                <p>© Coincart {{year}}</p>
-
-                <!-- App Links -->
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  width="100%"
-                  style="margin-top: 20px"
-                >
-                  <tr>
-                    <td style="text-align: center">
-                      <p style="margin-bottom: 10px">
-                        Get the latest Coincart App for your phone
-                      </p>
-                      <a
-                        href="https://apps.apple.com/app/coincart?utm_source=email"
-                        class="appLink"
-                        style="text-decoration: none"
-                      >
-                        <img
-                          src="https://cdn.freebiesupply.com/logos/large/2x/download-on-the-app-store-apple-logo-png-transparent.png"
-                          alt="App Store"
-                          width="120"
-                          style="margin: 0 5px"
-                        />
-                      </a>
-                      <a
-                        href="https://play.google.com/store/apps/details?id=com.coincart&utm_source=email"
-                        class="appLink"
-                        style="text-decoration: none"
-                      >
-                        <img
-                          src="https://freelogopng.com/images/all_img/1664287128google-play-store-logo-png.png"
-                          alt="Play Store"
-                          width="120"
-                          style="margin: 0 5px"
-                        />
-                      </a>
-                    </td>
-                  </tr>
-                </table>
-
-                <!-- Verification -->
-                <p style="margin-top: 20px; font-size: 12px; color: #9ca3af">
-                  This email was sent to {{email}}. If you did not create this
-                  account, please contact us immediately.
-                </p>
-
-                <!-- Unsubscribe -->
-                <div style="margin-top: 20px; font-size: 12px; color: #9ca3af">
-                  <p>
-                    You're receiving this email because you made a transaction
-                    on Coincart.
-                  </p>
-                  <p>
-                    To update your email preferences or unsubscribe from
-                    marketing emails,
-                    <a
-                      href="https://coincart.com/email-preferences?email={{encodedEmail}}&token={{unsubscribeToken}}&utm_source=email"
-                      style="color: #9ca3af; text-decoration: underline"
-                      >click here</a
-                    >.
-                  </p>
-                  <p>
-                    Please note that you cannot unsubscribe from transaction and
-                    security emails.
-                  </p>
-                </div>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-    <!-- Email tracking pixel -->
-    <img
-      src="https://coincart.com/email-track/{{messageId}}.png"
-      alt=""
-      width="1"
-      height="1"
-      border="0"
-      style="
-        height: 1px !important;
-        width: 1px !important;
-        border-width: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-      "
-    />
+        <hr />
+        <h4>Important Disclosures:</h4>
+        <p>
+          This is a transactional email and not promotional in nature. The
+          $10.00 received has been credited to your CoinCart wallet for future
+          use. CoinCart is not a financial institution. Your funds are stored in
+          your account for use within our ecosystem only, subject to our
+          <a href="https://coincart.us/terms">Terms of Service</a> and
+          <a href="https://coincart.us/privacy-policy">Privacy Policy</a>.
+        </p>
+      </div>
+      <div class="footer">
+        <p>
+          &copy; 2025 CoinCart, Inc. | 123 Crypto Lane, Block City, BC 12345
+        </p>
+        <p>
+          You can manage your communication preferences or
+          <a href="https://coincart.us/unsubscribe?email=[User Email]"
+            >unsubscribe</a
+          >
+          here.
+        </p>
+      </div>
+    </div>
   </body>
 </html>

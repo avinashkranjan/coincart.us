@@ -130,8 +130,14 @@ export default function Navbar() {
             </NavigationMenu>
           </div>
           <div className="flex items-center space-x-4">
-            <Button variant="ghost">Sign in</Button>
-            <Button>Get started</Button>
+            <Link href={`/sign-in`}>
+              <Button className="cursor-pointer" variant="ghost">
+                Sign in
+              </Button>
+            </Link>
+            <Link href={`/sign-up`}>
+              <Button className="cursor-pointer">Get started</Button>
+            </Link>
           </div>
         </div>
       </div>

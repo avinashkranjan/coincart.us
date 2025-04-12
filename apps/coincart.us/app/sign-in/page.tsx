@@ -27,7 +27,7 @@ export default function SignIn() {
       >
         <Link href="/" className="flex items-center justify-center">
           <Bitcoin className="h-8 w-8 text-blue-600" />
-          <span className="ml-2 text-2xl font-bold">Coinbase</span>
+          <span className="ml-2 text-2xl font-bold">Coincart</span>
         </Link>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Sign in to your account
